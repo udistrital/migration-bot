@@ -1,0 +1,22 @@
+version: '2'
+services:
+  api:
+    build:
+      context: ./node_build
+      # args:
+      #   - USER_ID=$USER_ID
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/home/node/app
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - APP_DIR=${APP_DIR}
+      - APP_PORT=${APP_PORT}
+    command: sh -c ' express-api /home/node/app/${APP_DIR}; cd /home/node/app/${APP_DIR}; npm install; nodemon app.js'
+    restart: always
+    networks:
+      - middleware_net
+networks:
+  middleware_net:
+    external: true
